@@ -1,0 +1,19 @@
+{
+    "name": "divulgueregional/api-sicredi",
+    "description": "Api Sicredi, inicialmene para gerar o pix",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Divulgueregional\\ApiSicredi\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Roseno Matos",
+            "email": "rosenomatos@gmail.com"
+        }
+    ],
+    "require": {
+        "guzzlehttp/guzzle": "^7.0"
+    }
+}

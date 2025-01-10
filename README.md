@@ -16,17 +16,17 @@ Para utilizar a biblioteca através do composer:
 composer require divulgueregional/api-sicredi
 ```
 
-<!-- ## Atualizar:
+## Atualizar:
 
 Pela última tag: </b>
 
 ```php
-composer update divulgueregional/api-sicredi 1.0.0
-``` -->
+composer update divulgueregional/api-sicredi 1.0.1
+```
 
-<!-- ## Documentação:
+## Documentação:
 
-Acesse a pasta docs e leia o README.md - Em desenvolvimento -->
+Acesse a pasta docs e leia o README.md - Em desenvolvimento
 
 ## O QUE VOCÊ PODE UTILIZAR
 

@@ -1,6 +1,6 @@
 {
     "name": "divulgueregional/api-sicredi",
-    "description": "Api Sicredi, inicialmene para gerar o pix",
+    "description": "Api Sicredi",
     "license": "MIT",
     "autoload": {
         "psr-4": {

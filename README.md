@@ -1,4 +1,4 @@
-# API-SICRED
+# API-SICREDI
 
 ## Introdução
 

@@ -799,6 +799,7 @@ class SicrediBoletos
 
     public function consultarNossoNumeroBoleto($nossoNumero)
     {
+        //ajustado o codigoBeneficiario
         $options = $this->optionsRequest;
         $options['headers']['Authorization'] = "Bearer {$this->token}";
         $options['headers']['Content-Type'] = 'application/json';

@@ -19,7 +19,6 @@ class SicrediBoletos
     function __construct($config)
     {
         $this->config = $config;
-
         $this->client = new Client([
             'base_uri' => 'https://api-parceiro.sicredi.com.br',
         ]);
@@ -806,9 +805,9 @@ class SicrediBoletos
         $options['headers']['cooperativa'] = $this->config['cooperativa'];
         $options['headers']['posto'] = $this->config['posto'];
 
-        $endpoint = "cobranca/boleto/v1/boletos?codigoBeneficiario=12345&nossoNumero={$nossoNumero}";
+        $endpoint = "cobranca/boleto/v1/boletos?codigoBeneficiario={$this->config['codigoBeneficiario']}&nossoNumero={$nossoNumero}";
         if ($this->config['sandbox']) {
-            $endpoint = "/sb/cobranca/boleto/v1/boletos?codigoBeneficiario=12345&nossoNumero={$nossoNumero}";
+            $endpoint = "/sb/cobranca/boleto/v1/boletos?codigoBeneficiario={$this->config['codigoBeneficiario']}&nossoNumero={$nossoNumero}";
         }
         try {
             $response = $this->client->request(

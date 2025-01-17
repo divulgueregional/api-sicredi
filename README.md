@@ -21,7 +21,7 @@ composer require divulgueregional/api-sicredi
 Pela última tag: </b>
 
 ```php
-composer update divulgueregional/api-sicredi 1.0.2
+composer update divulgueregional/api-sicredi 1.0.3
 ```
 
 ## Documentação:

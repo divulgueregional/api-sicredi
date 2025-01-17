@@ -839,9 +839,9 @@ class SicrediBoletos
         $options['headers']['cooperativa'] = $this->config['cooperativa'];
         $options['headers']['posto'] = $this->config['posto'];
 
-        $endpoint = "cobranca/boleto/v1/boletos/liquidados/dia?codigoBeneficiario=12345&dia={$dia}";
+        $endpoint = "cobranca/boleto/v1/boletos/liquidados/dia?codigoBeneficiario={$this->config['codigoBeneficiario']}&dia={$dia}";
         if ($this->config['sandbox']) {
-            $endpoint = "/sb/cobranca/boleto/v1/boletos/liquidados/dia?codigoBeneficiario=12345&dia={$dia}";
+            $endpoint = "/sb/cobranca/boleto/v1/boletos/liquidados/dia?codigoBeneficiario={$this->config['codigoBeneficiario']}&dia={$dia}";
         }
         try {
             $response = $this->client->request(
@@ -869,9 +869,9 @@ class SicrediBoletos
         $options = $this->optionsRequest;
         $options['headers']['Authorization'] = "Bearer {$this->token}";
 
-        $endpoint = "cobranca/v1/cobranca-financeiro/movimentacoes?cooperativa=6789&codigoBeneficiario=12345&posto=03&dataLancamento={$dados['dataLancamento']}&pagina={$dados['pagina']}&tipoMovimento={$dados['tipoMovimentacao']}";
+        $endpoint = "cobranca/v1/cobranca-financeiro/movimentacoes?cooperativa=6789&codigoBeneficiario={$this->config['codigoBeneficiario']}&posto=03&dataLancamento={$dados['dataLancamento']}&pagina={$dados['pagina']}&tipoMovimento={$dados['tipoMovimentacao']}";
         if ($this->config['sandbox']) {
-            $endpoint = "/sb/cobranca/v1/cobranca-financeiro/movimentacoes?cooperativa=6789&codigoBeneficiario=12345&posto=03&dataLancamento={$dados['dataLancamento']}&pagina={$dados['pagina']}&tipoMovimento={$dados['tipoMovimentacao']}";
+            $endpoint = "/sb/cobranca/v1/cobranca-financeiro/movimentacoes?cooperativa=6789&codigoBeneficiario={$this->config['codigoBeneficiario']}&posto=03&dataLancamento={$dados['dataLancamento']}&pagina={$dados['pagina']}&tipoMovimento={$dados['tipoMovimentacao']}";
         }
         try {
             $response = $this->client->request(
@@ -903,9 +903,9 @@ class SicrediBoletos
         $options['headers']['cooperativa'] = $this->config['cooperativa'];
         $options['headers']['posto'] = $this->config['posto'];
 
-        $endpoint = "cobranca/boleto/v1/boletos/cadastrados?idTituloEmpresa=XYZ123456789ABC&codigoBeneficiario=12345";
+        $endpoint = "cobranca/boleto/v1/boletos/cadastrados?idTituloEmpresa=XYZ123456789ABC&codigoBeneficiario={$this->config['codigoBeneficiario']}";
         if ($this->config['sandbox']) {
-            $endpoint = "/sb/cobranca/boleto/v1/boletos/cadastrados?idTituloEmpresa=445488181811848&codigoBeneficiario=12345";
+            $endpoint = "/sb/cobranca/boleto/v1/boletos/cadastrados?idTituloEmpresa=445488181811848&codigoBeneficiario={$this->config['codigoBeneficiario']}";
         }
         try {
             $response = $this->client->request(

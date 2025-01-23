@@ -1,62 +1,49 @@
 <?php
 
-namespace Divulgueregional\apisicredi;
+namespace Divulgueregional\ApiSicredi;
 
-// use Exception;
+use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 
 class SicrediPix
 {
     private $config;
-    private $tokens;
-    private $token;
-    private $retornoTtoken;
-    private $client;
-    private $optionsRequest;
+    private $url;
+    protected $client;
+    protected $token;
 
-    function __construct($config, $sandbox = false)
+    function __construct($config = [])
     {
         $this->config = $config;
-        $url = 'https://api-parceiro.sicredi.com.br';
-        if ($sandbox) {
-            $url = 'https://api-parceiro.sicredi.com.br/sb';
-        }
-        $this->client = new Client([
-            'base_uri' => $url,
-        ]);
+        $this->url = 'https://api-pix.sicredi.com.br'; // Definindo URL para o ambiente de produção
 
-        // $this->optionsRequest = [
-        //     'headers' => [
-        //         'Accept' => 'application/json',
-        //         'Content-Type' => 'application/x-www-form-urlencoded',
-        //         'x-sicoob-clientid' => $config['client_id']
-        //     ],
-        // ];
+        if ($this->config['producao'] == 0) {
+            $this->url = 'https://api-pix-h.sicredi.com.br'; //, define homologação
+        }
+
+        $this->client = new Client([
+            'base_uri' => $this->url,
+        ]);
     }
 
     #################################################
     ###### TOKEN ####################################
     #################################################
-    public function gerarToken()
+    public function gerarTokenPix()
     {
         try {
             $response = $this->client->request(
                 'POST',
-                '/oauth/token',
+                'oauth/token?grant_type=client_credentials&scope=cob.write+cob.read+webhook.read+webhook.write',
                 [
                     'headers' => [
-                        'Accept' => 'application/json',
                         'Content-Type' => 'application/json',
                         'Authorization' => 'Basic ' . base64_encode($this->config['CLIENT_ID'] . ':' . $this->config['CLIENT_SECRET']) . ''
                     ],
-                    'cert' => $this->config['CERTIFICADO'], // Caminho para o certificado
-                    'ssl_key' => $this->config['CHAVE_PRIVADA'], // Caminho para a chave privada (sem senha)
+                    'cert' => $this->config['CERTIFICADO_PEM'], // Caminho para o certificado
+                    'ssl_key' => $this->config['CERTIFICADO_KEY'], // Caminho para a chave privada (sem senha)
                     'verify' => false, // Ou o caminho para o certificado da CA se necessário
-                    'form_params' => [
-                        'grant_type' => 'client_credentials',
-                        'scope' => 'cob.write+cob.read+webhook.read+webhook.write'
-                    ]
                 ]
             );
 
@@ -79,6 +66,15 @@ class SicrediPix
     {
         return $this->token;
     }
+
+    private function analisarToken()
+    {
+        if ($this->token == '') {
+            $token = $this->gerarTokenPix();
+            $this->token = $token['access_token'];
+        }
+    }
+
     #################################################
     ###### FIM TOKEN ################################
     #################################################
@@ -88,71 +84,52 @@ class SicrediPix
     #################################################
 
     // Gerar Pix
-    public function criarCobranca($dadosPix)
+    public function criarCobranca($cobranca)
     {
+        $this->analisarToken();
         try {
             $response = $this->client->request(
                 'POST',
                 '/api/v2/cob',
                 [
                     'headers' => [
-                        'Accept' => 'application/json',
                         'Content-Type' => 'application/json',
                         'Authorization' => "Bearer {$this->token}", // Utilizando Bearer Token
                     ],
-                    'cert' => $this->config['CERTIFICADO'], // Caminho para o certificado
-                    'ssl_key' => $this->config['CHAVE_PRIVADA'], // Caminho para a chave privada (sem senha)
+                    'cert' => $this->config['CERTIFICADO_PEM'], // Caminho para o certificado
+                    'ssl_key' => $this->config['CERTIFICADO_KEY'], // Caminho para a chave privada (sem senha)
                     'verify' => false, // Verificar se necessário
-                    'json' => [
-                        'calendario' => [
-                            'dataDeVencimento' => $dadosPix['dataDeVencimento'], //"2040-04-01",
-                            "validadeAposVencimento" => 1
-                        ],
-                        'valor' => [
-                            'original' => $dadosPix['valor'],
-                            "modalidadeAlteracao" => 1
-                        ],
-                        'chave' => $dadosPix['chave_pix'],
-                        "solicitacaoPagador" => "Serviço realizado.",
-                        'infoAdicionais' => [
-                            'nome' =>  $dadosPix['fatura_id'],
-                            'valor' =>  $dadosPix['parcela_valor']
-                        ],
-                        // [
-                        //     "nome" => "fatura_id",
-                        //     "valor" =>  123334
-                        // ]
-                    ],
+                    'body' => json_encode($cobranca),
                 ]
             );
             $retorno = json_decode($response->getBody()->getContents());
             return $retorno; // Aqui você retorna o resultado da cobrança
         } catch (\Exception $e) {
-            // return new Exception("Falha ao gerar Pix: {$e->getMessage()}");
+            return new Exception("Falha ao gerar Pix: {$e->getMessage()}");
         }
     }
 
-    public function dadosDeCobranca($id)
+    public function dadosDeCobranca($txid)
     {
+        $this->analisarToken();
         try {
             $response = $this->client->request(
                 'GET',
-                "/api/v2/cob/{$id}",
+                "/api/v2/cob/{$txid}",
                 [
                     'headers' => [
-                        'Accept' => 'application/json',
                         'Content-Type' => 'application/json',
                         'Authorization' => "Bearer {$this->token}", // Utilizando Bearer Token
                     ],
-                    'cert' => $this->config['CERTIFICADO'], // Caminho para o certificado
-                    'ssl_key' => $this->config['CHAVE_PRIVADA'], // Caminho para a chave privada (sem senha)
+                    'cert' => $this->config['CERTIFICADO_PEM'], // Caminho para o certificado
+                    'ssl_key' => $this->config['CERTIFICADO_KEY'], // Caminho para a chave privada (sem senha)
                     'verify' => false, // Verificar se necessário
                 ]
             );
             $retorno = json_decode($response->getBody()->getContents());
             return $retorno; // Aqui você retorna o resultado da cobrança
         } catch (\Exception $e) {
-            // return new Exception("Falha ao buscar Pix: {$e->getMessage()}");
+            return new Exception("Falha ao buscar Pix: {$e->getMessage()}");
         }
     }
 
@@ -163,35 +140,53 @@ class SicrediPix
     #################################################
     ###### WEBHOOK ##################################
     #################################################
-    public function updateWebhook($chave_pix, $webhookUrl)
+    public function updateWebhook($webhookUrl, $chave_pix)
     {
+        $this->analisarToken();
         try {
             $response = $this->client->request(
                 'PUT',
                 "/api/v2/webhook/{$chave_pix}",
                 [
                     'headers' => [
-                        'Accept' => 'application/json',
                         'Content-Type' => 'application/json',
                         'Authorization' => "Bearer {$this->token}", // Utilizando Bearer Token
                     ],
-                    'cert' => $this->config['CERTIFICADO'], // Caminho para o certificado
-                    'ssl_key' => $this->config['CHAVE_PRIVADA'], // Caminho para a chave privada (sem senha)
+                    'cert' => $this->config['CERTIFICADO_PEM'], // Caminho para o certificado
+                    'ssl_key' => $this->config['CERTIFICADO_KEY'], // Caminho para a chave privada (sem senha)
                     'verify' => false, // Verificar se necessário
                     'json' => [
                         'webhookUrl' => $webhookUrl,
                     ],
                 ]
             );
-            $retorno = json_decode($response->getBody()->getContents());
-            return $retorno; // Aqui você retorna o resultado da cobrança
-        } catch (\Exception $e) {
-            // return new Exception("Falha ao criar webhook: {$e->getMessage()}");
+            $responseBody = $response->getBody()->getContents();
+            if (empty($responseBody)) {
+                return "WebHook criado com sucesso.";
+            } else {
+                return "Corpo da resposta: " . $responseBody;
+            }
+            // $retorno = json_decode($response->getBody()->getContents());
+            // return $retorno; // Aqui você retorna o resultado da cobrança
+        } catch (\GuzzleHttp\Exception\ClientException $e) {
+            // Captura a resposta do erro.
+            $response = $e->getResponse();
+            $body = $response->getBody()->getContents();
+            $data = json_decode($body, true); // Decodifica o JSON.
+
+            // Verifica se o campo "title" existe e exibe.
+            if (isset($data['title'])) {
+                return $data['title'];
+            } else {
+                return "Erro desconhecido.";
+            }
+            // return new Exception("Falha ao buscar webhook: {$e->getMessage()}");
         }
     }
 
     public function getWebhook($chave_pix)
     {
+        $this->analisarToken();
         try {
             $response = $this->client->request(
                 'GET',
@@ -202,20 +197,32 @@ class SicrediPix
                         'Content-Type' => 'application/json',
                         'Authorization' => "Bearer {$this->token}", // Utilizando Bearer Token
                     ],
-                    'cert' => $this->config['CERTIFICADO'], // Caminho para o certificado
-                    'ssl_key' => $this->config['CHAVE_PRIVADA'], // Caminho para a chave privada (sem senha)
+                    'cert' => $this->config['CERTIFICADO_PEM'], // Caminho para o certificado
+                    'ssl_key' => $this->config['CERTIFICADO_KEY'], // Caminho para a chave privada (sem senha)
                     'verify' => false, // Verificar se necessário
                 ]
             );
             $retorno = json_decode($response->getBody()->getContents());
             return $retorno; // Aqui você retorna o resultado da cobrança
-        } catch (\Exception $e) {
+        } catch (\GuzzleHttp\Exception\ClientException $e) {
+            // Captura a resposta do erro.
+            $response = $e->getResponse();
+            $body = $response->getBody()->getContents();
+            $data = json_decode($body, true); // Decodifica o JSON.
+
+            // Verifica se o campo "title" existe e exibe.
+            if (isset($data['title'])) {
+                return $data['title'];
+            } else {
+                return "Erro desconhecido.";
+            }
             // return new Exception("Falha ao buscar webhook: {$e->getMessage()}");
         }
     }
 
     public function deleteWebhook($chave_pix)
     {
+        $this->analisarToken();
         try {
             $response = $this->client->request(
                 'DELETE',
@@ -226,15 +233,31 @@ class SicrediPix
                         'Content-Type' => 'application/json',
                         'Authorization' => "Bearer {$this->token}", // Utilizando Bearer Token
                     ],
-                    'cert' => $this->config['CERTIFICADO'], // Caminho para o certificado
-                    'ssl_key' => $this->config['CHAVE_PRIVADA'], // Caminho para a chave privada (sem senha)
+                    'cert' => $this->config['CERTIFICADO_PEM'], // Caminho para o certificado
+                    'ssl_key' => $this->config['CERTIFICADO_KEY'], // Caminho para a chave privada (sem senha)
                     'verify' => false, // Verificar se necessário
                 ]
             );
             $retorno = json_decode($response->getBody()->getContents());
+            if (empty($retorno)) {
+                return "WebHook EXCLUIDO com sucesso.";
+            } else {
+                return "Resposta: " . $retorno;
+            }
             return $retorno; // Aqui você retorna o resultado da cobrança
-        } catch (\Exception $e) {
-            // return new Exception("Falha ao deletar webhook: {$e->getMessage()}");
+        } catch (\GuzzleHttp\Exception\ClientException $e) {
+            // Captura a resposta do erro.
+            $response = $e->getResponse();
+            $body = $response->getBody()->getContents();
+            $data = json_decode($body, true); // Decodifica o JSON.
+
+            // Verifica se o campo "title" existe e exibe.
+            if (isset($data['title'])) {
+                return $data['title'];
+            } else {
+                return "Erro desconhecido.";
+            }
+            // return new Exception("Falha ao buscar webhook: {$e->getMessage()}");
         }
     }
     #################################################
@@ -246,6 +269,6 @@ class SicrediPix
     #################################################
     public function teste()
     {
-        return 'Teste OK';
+        return 'Teste acesso pix feito com sucesso';
     }
 }

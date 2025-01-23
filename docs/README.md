@@ -18,3 +18,7 @@ Siga a docmentação para poder utilizar a API do SICREDI
   Clique em Enviar.<br>
 - Username: utilizando o Beneficiário + Cooperativa<br>
 - password: que foi gerada no Internet Banking
+
+## Processo pix
+
+- Gerar certificado: https://developer.sicredi.com.br/api-portal/pt-br/certificates

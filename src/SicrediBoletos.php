@@ -934,6 +934,6 @@ class SicrediBoletos
 
     public function teste()
     {
-        return 'teste acesso boleto feito com sucesso';
+        return 'Acesso ao endpoint boleto feito com sucesso';
     }
 }

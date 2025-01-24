@@ -16,10 +16,13 @@ class SicrediPix
     function __construct($config = [])
     {
         $this->config = $config;
-        $this->url = 'https://api-pix.sicredi.com.br'; // Definindo URL para o ambiente de produção
+        // print_r($this->config);
+        // Definindo URL para o ambiente de produção
+        $this->url = 'https://api-pix.sicredi.com.br';
 
+        // Se o ambiente não for de produção (tpAmb != 1), define homologação
         if ($this->config['producao'] == 0) {
-            $this->url = 'https://api-pix-h.sicredi.com.br'; //, define homologação
+            $this->url = 'https://api-pix-h.sicredi.com.br';
         }
 
         $this->client = new Client([
@@ -41,7 +44,7 @@ class SicrediPix
                         'Content-Type' => 'application/json',
                         'Authorization' => 'Basic ' . base64_encode($this->config['CLIENT_ID'] . ':' . $this->config['CLIENT_SECRET']) . ''
                     ],
-                    'cert' => $this->config['CERTIFICADO_PEM'], // Caminho para o certificado
+                    'cert' => $this->config['CERTIFICADO_CER'], // Caminho para o certificado
                     'ssl_key' => $this->config['CERTIFICADO_KEY'], // Caminho para a chave privada (sem senha)
                     'verify' => false, // Ou o caminho para o certificado da CA se necessário
                 ]
@@ -96,7 +99,7 @@ class SicrediPix
                         'Content-Type' => 'application/json',
                         'Authorization' => "Bearer {$this->token}", // Utilizando Bearer Token
                     ],
-                    'cert' => $this->config['CERTIFICADO_PEM'], // Caminho para o certificado
+                    'cert' => $this->config['CERTIFICADO_CER'], // Caminho para o certificado
                     'ssl_key' => $this->config['CERTIFICADO_KEY'], // Caminho para a chave privada (sem senha)
                     'verify' => false, // Verificar se necessário
                     'body' => json_encode($cobranca),
@@ -121,7 +124,7 @@ class SicrediPix
                         'Content-Type' => 'application/json',
                         'Authorization' => "Bearer {$this->token}", // Utilizando Bearer Token
                     ],
-                    'cert' => $this->config['CERTIFICADO_PEM'], // Caminho para o certificado
+                    'cert' => $this->config['CERTIFICADO_CER'], // Caminho para o certificado
                     'ssl_key' => $this->config['CERTIFICADO_KEY'], // Caminho para a chave privada (sem senha)
                     'verify' => false, // Verificar se necessário
                 ]
@@ -152,7 +155,7 @@ class SicrediPix
                         'Content-Type' => 'application/json',
                         'Authorization' => "Bearer {$this->token}", // Utilizando Bearer Token
                     ],
-                    'cert' => $this->config['CERTIFICADO_PEM'], // Caminho para o certificado
+                    'cert' => $this->config['CERTIFICADO_CER'], // Caminho para o certificado
                     'ssl_key' => $this->config['CERTIFICADO_KEY'], // Caminho para a chave privada (sem senha)
                     'verify' => false, // Verificar se necessário
                     'json' => [
@@ -197,7 +200,7 @@ class SicrediPix
                         'Content-Type' => 'application/json',
                         'Authorization' => "Bearer {$this->token}", // Utilizando Bearer Token
                     ],
-                    'cert' => $this->config['CERTIFICADO_PEM'], // Caminho para o certificado
+                    'cert' => $this->config['CERTIFICADO_CER'], // Caminho para o certificado
                     'ssl_key' => $this->config['CERTIFICADO_KEY'], // Caminho para a chave privada (sem senha)
                     'verify' => false, // Verificar se necessário
                 ]
@@ -233,7 +236,7 @@ class SicrediPix
                         'Content-Type' => 'application/json',
                         'Authorization' => "Bearer {$this->token}", // Utilizando Bearer Token
                     ],
-                    'cert' => $this->config['CERTIFICADO_PEM'], // Caminho para o certificado
+                    'cert' => $this->config['CERTIFICADO_CER'], // Caminho para o certificado
                     'ssl_key' => $this->config['CERTIFICADO_KEY'], // Caminho para a chave privada (sem senha)
                     'verify' => false, // Verificar se necessário
                 ]
@@ -269,6 +272,6 @@ class SicrediPix
     #################################################
     public function teste()
     {
-        return 'Teste acesso pix feito com sucesso';
+        return 'Acesso ao endpoint pix feito com sucesso';
     }
 }

@@ -112,6 +112,15 @@ PDF BOLETO
     echo $reponse;
 ```
 
+PDF BOLETO
+
+```php
+    $reponse = $sicredi->pdfBoleto($linhaDigitavel);
+    header('Content-Type: application/pdf');
+    header('Content-Disposition: inline; filename="boleto.pdf"'); // Exibir no navegador
+    echo $reponse;
+```
+
 BAIXAR BOLETO
 
 ```php

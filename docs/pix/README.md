@@ -10,7 +10,7 @@ Para iniciar o processo de integração da API Pix, o associado Sicredi deve con
 
 ## Gerar o Pix
 
-Gerar o token.
+Gerar o pix.
 
 ```php
     require_once '../../../vendor/autoload.php';
@@ -43,4 +43,14 @@ Gerar o token.
     $reponse = $sicrediPix->criarCobranca($cobranca);
     echo "<pre>";
     print_r($reponse);
+```
+
+CONSULTAR PIX
+
+```php
+    $txid = '5bb4ff33fe5c48eea80df3a0bcefb298';
+
+    $reponse = $sicrediPix->dadosDeCobranca($txid);
+    echo "<pre>";
+    print_r($response);
 ```

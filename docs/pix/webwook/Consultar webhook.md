@@ -1,6 +1,6 @@
-# CONSULTAR CALLBACKS-INTER
+# CONSULTAR WHEBHOOK-INTER
 
-## Consultar Callbacks
+## Consultar hebhook
 
 Retorna o link do webhook.<br>
 

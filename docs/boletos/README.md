@@ -112,6 +112,7 @@ Gerar o boleto.
 PDF BOLETO
 
 ```php
+    $linhaDigitavel = '';
     $reponse = $sicredi->pdfBoleto($linhaDigitavel);
     header('Content-Type: application/pdf');
     header('Content-Disposition: inline; filename="boleto.pdf"'); // Exibir no navegador

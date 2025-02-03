@@ -2,7 +2,8 @@
 
 ## Orientações Iniciais
 
-Para iniciar o processo de integração da API Pix, o associado Sicredi deve contratar o produto com seu Gerente de Conta e optar pela opção Outros Provedores (Provedores Parceiros são atendidos pelo Internet Banking do Sicredi).
+Para iniciar o processo de integração da API Pix, o associado Sicredi deve contratar o produto com seu Gerente de Conta e optar pela opção Outros Provedores (Provedores Parceiros são atendidos pelo Internet Banking do Sicredi).<br>
+O cliente precisa informr CLIENTE-ID e CLIENTE SECRET
 
 ## gerar certificado
 

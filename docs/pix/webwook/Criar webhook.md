@@ -14,7 +14,7 @@ Você só pode ter 1 webhook
     use Divulgueregional\ApiInterV2\InterBanking;
 
     $config  = [
-        "producao" => 1, // 0 Homo | 1 prod
+        "producao" => 0, // 0 Homo | 1 prod
         "CLIENT_ID" => "",
         "CLIENT_SECRET" => "",
         "CERTIFICADO_CER" => __DIR__ . "/cert.cer",
@@ -23,13 +23,12 @@ Você só pode ter 1 webhook
     ];
     $sicrediPix = new SicrediPix($config);
 
-    $token = '';//seu token
+    $chave_pix = '';
+    $webhookUrl = 'https://seu_dominio/api/sicredi/webhook.php';
     try {
-        echo "<pre>";
-        $webhookUrl = 'https://seu_dominio/api/sicredi/webhook.php';
-        $chave_pix = '';
         $reponse = $sicrediPix->updateWebhook($webhookUrl, $chave_pix);
 
+        echo "<pre>";
         print_r($reponse);
     } catch (\Exception $e) {
         echo $e->getMessage();

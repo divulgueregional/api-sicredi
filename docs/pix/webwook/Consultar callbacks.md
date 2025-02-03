@@ -10,7 +10,7 @@ Retorna o link do webhook.<br>
     use Divulgueregional\ApiInterV2\InterBanking;
 
     $config  = [
-        "producao" => 1, // 0 Homo | 1 prod
+        "producao" => 0, // 0 Homo | 1 prod
         "CLIENT_ID" => "",
         "CLIENT_SECRET" => "",
         "CERTIFICADO_CER" => __DIR__ . "/cert.cer",
@@ -19,12 +19,11 @@ Retorna o link do webhook.<br>
     ];
     $sicrediPix = new SicrediPix($config);
 
-    $token = '';//seu token
+    $chave_pix = '';
     try {
-        echo "<pre>";
-        $chave_pix = '';
         $reponse = $sicrediPix->getWebhook($chave_pix);
 
+        echo "<pre>";
         print_r($reponse);
     } catch (\Exception $e) {
         echo $e->getMessage();

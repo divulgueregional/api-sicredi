@@ -1,8 +1,8 @@
-# PIX-SICREDI
+# TOKEN-SICREDI
 
 ## Orientações Iniciais
 
-Para iniciar o processo de integração da API Pix, o associado Sicredi deve contratar o produto com seu Gerente de Conta e optar pela opção Outros Provedores (Provedores Parceiros são atendidos pelo Internet Banking do Sicredi).
+O token não precisa ser informado pois gera na hora da requisição dos endpoints, mas se quiser guardar pode setar o token.
 
 ## Gerar o token
 
@@ -25,4 +25,18 @@ Gerar o token.
     $tokenPix = $sicrediPix->gerarTokenPix();
     echo "<pre>";
     print_r($tokenPix);
+```
+
+Set token pix
+
+```php
+    $token = '';
+    $sicrediPix->setToken($token);
+```
+
+Set token boleto
+
+```php
+    $token = '';
+    $sicredi->setToken($token);
 ```

@@ -21,9 +21,7 @@ Para iniciar o processo de integração da API Boleto, o associado Sicredi deve 
 - Username: utilizando o Beneficiário + Cooperativa<br>
 - password: que foi gerada no Internet Banking
 
-## Gerar o Boleto
-
-Gerar o boleto.
+INCIO PADRÃO PRA CONEXÃO DO BOLETO
 
 ```php
     require_once '../../../vendor/autoload.php';
@@ -41,7 +39,15 @@ Gerar o boleto.
     ];
 
     $sicredi = new SicrediBoletos($config); // true ativa sendbox
+```
 
+Abaixo os endponts da api boletos.
+
+## Gerar o Boleto
+
+Gerar o boleto.
+
+```php
     $dadosBoleto = [
         "beneficiarioFinal" => [
             "cep" => 91250000,
@@ -101,15 +107,6 @@ Gerar o boleto.
     $reponse = $sicredi->registrarBoleto($dadosBoleto);
     echo "<pre>";
     print_r($reponse);
-```
-
-PDF BOLETO
-
-```php
-    $reponse = $sicredi->pdfBoleto($linhaDigitavel);
-    header('Content-Type: application/pdf');
-    header('Content-Disposition: inline; filename="boleto.pdf"'); // Exibir no navegador
-    echo $reponse;
 ```
 
 PDF BOLETO

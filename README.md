@@ -24,7 +24,7 @@ composer update divulgueregional/api-sicredi 1.0.5
 
 ## Documentação:
 
-Acesse a pasta docs e leia o README.md - Em desenvolvimento
+Acesse a pasta docs e leia o README.md
 
 ## O QUE VOCÊ PODE UTILIZAR
 
